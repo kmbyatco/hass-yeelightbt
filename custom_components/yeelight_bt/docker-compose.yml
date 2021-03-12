@@ -1,0 +1,9 @@
+version: '3'
+services:
+
+  yeelightbt:
+    build: .
+    volumes:
+      - ./:/opt/yeelight_bt
+    network_mode: host
+    privileged: true
