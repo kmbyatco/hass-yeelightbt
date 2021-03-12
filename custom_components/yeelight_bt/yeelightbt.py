@@ -550,8 +550,9 @@ def discover_yeelight_lamps():
             if model:
                 lamp_list.append({"mac": dev.addr, "model": model})
                 _LOGGER.info(f"found {model} with mac: {dev.addr}, value:{value}")
-    return lamp_list
+                return dev
 
+    _LOGGER.info("No YEELIGHT_BT devices detected")
 
 if __name__ == "__main__":
 
@@ -560,5 +561,12 @@ if __name__ == "__main__":
     # start the logger to stdout
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     _LOGGER.info("YEELIGHT_BT scanning starts")
-    discover_yeelight_lamps()
+    device = discover_yeelight_lamps()
+    lamp = Lamp(device.addr)
+    if lamp.connect():
+        if not lamp.is_on:
+            lamp.turn_on()
+        lamp.turn_off()
+        lamp.disconnect()
+
     _LOGGER.info("YEELIGHT_BT scanning ends")
